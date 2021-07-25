@@ -40,7 +40,7 @@ class WrapBit:
             print('Buy Coin !')
 
     def SellMarketOrder(self, ticker, percent):
-        coin = self.GetBalance(ticker)
+        coin = self.GetBalance('ADA')
         current_price_coin = self.GetCurrentPrice(ticker)
         if coin > (5000/current_price_coin):
             self.upbit.sell_market_order(ticker, coin*0.9995 * percent / 100.0)
@@ -55,7 +55,7 @@ class Algorithm(WrapBit):
                 # end_time = start_time + datetime.timedelta(minutes=75)
                 end_time = start_time + datetime.timedelta(days=1)
 
-                if start_time < now < end_time - datetime.timedelta(seconds=10):
+                if start_time < now < end_time - datetime.timedelta(seconds=60):
                     target_price = self.GetTargetPrice(ticker, k)
                     current_price = self.GetCurrentPrice(ticker)
                     if target_price < current_price:
