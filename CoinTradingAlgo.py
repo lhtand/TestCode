@@ -39,15 +39,16 @@ class WrapBit:
             self.upbit.buy_market_order(buy_ticker, krw * 0.9995 * percent / 100.0)
             print('Buy Coin !')
 
-    def SellMarketOrder(self, sell_ticker, percent):
-        coin = self.GetBalance(sell_ticker)
-        current_price_coin = self.GetCurrentPrice('KRW-' + sell_ticker)
+    def SellMarketOrder(self, bal_tickers, percent):
+        coin = self.GetBalance(bal_tickers)
+        sell_ticker = 'KRW-' + bal_tickers
+        current_price_coin = self.GetCurrentPrice(sell_ticker)
         if coin > (5000/current_price_coin):
             self.upbit.sell_market_order(sell_ticker, coin*0.9995 * percent / 100.0)
             print('Sell Coin !')
 
 class Algorithm(WrapBit):
-    def AutoLarry(self, buy_tickers, sell_tickers, k):
+    def AutoLarry(self, buy_tickers, bal_tickers, k):
         while True:
             try:
                 now = datetime.datetime.now()
@@ -55,14 +56,14 @@ class Algorithm(WrapBit):
                 # end_time = start_time + datetime.timedelta(minutes=75)
                 end_time = start_time + datetime.timedelta(days=1)
 
-                if start_time < now < end_time - datetime.timedelta(seconds=60):
+                if start_time < now < end_time - datetime.timedelta(minutes=30):
                     for ticker in buy_tickers:
                         target_price = self.GetTargetPrice(ticker, k)
                         current_price = self.GetCurrentPrice(ticker)
                         if target_price < current_price:
                             self.BuyMarketOrder(ticker, 100)
                 else:
-                    for ticker in sell_tickers:
+                    for ticker in bal_tickers:
                         self.SellMarketOrder(ticker, 100)
 
                 time.sleep(1)
